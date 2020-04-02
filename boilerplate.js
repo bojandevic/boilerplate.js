@@ -1,23 +1,20 @@
 window.emptyFn = function() {};
 
 HTMLElement.prototype.up = function(selector) {
-	var node = this;
-	while(node && node != document.body && !node.matches(selector))
+	let node = this;
+	while (node && node != document.body && !node.matches(selector)) {
 		node = node.parentElement;
+	}
 
-	if (node && node != document.body)
+	if (node && node != document.body) {
 		return node;
+	}
 };
 
-HTMLElement.prototype.query = function(selector) {
-	return this.querySelectorAll(selector);
-};
-
-HTMLElement.prototype.down = function(selector) {
-	return this.querySelector(selector);
-};
-
-HTMLElement.prototype.on = HTMLElement.prototype.addEventListener;
+HTMLElement.prototype.query = HTMLElement.prototype.querySelectorAll;
+HTMLElement.prototype.down  = HTMLElement.prototype.querySelector;
+HTMLElement.prototype.on    = HTMLElement.prototype.addEventListener;
+HTMLElement.prototype.un    = HTMLElement.prototype.removeEventListener;
 
 window.query = function(selector) {
 	return document.body.query(selector);
@@ -27,10 +24,17 @@ window.down = function(selector) {
 	return document.body.down(selector);
 };
 
-NodeList.prototype.on = function(eventName, listener) {
+NodeList.prototype.on = function(eventName, listener, options) {
 	listener = listener || emptyFn;
 	this.forEach(function(el) {
-		el.on(eventName, listener);
+		el.on(eventName, listener, options);
+	});
+};
+
+NodeList.prototype.un = function(eventName, listener, options) {
+	listener = listener || emptyFn;
+	this.forEach(function(el) {
+		el.un(eventName, listener, options);
 	});
 };
 
